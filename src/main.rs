@@ -4,7 +4,9 @@ use std::io::{self, BufRead, Write};
 
 fn usage() {
     println!("lyco-desktop-switcher [next|prev|status|capabilities|mcp] [--json]");
-    println!("Switching requires an interactive Windows desktop; status reports capabilities only.");
+    println!(
+        "Switching requires an interactive Windows desktop; status reports capabilities only."
+    );
 }
 
 fn command(name: &str) -> Result<Value, String> {
@@ -76,7 +78,10 @@ fn response(req: &Value) -> Option<Value> {
         "ping" => json!({}),
         "tools/list" => json!({"tools":tools()}),
         "tools/call" => {
-            let name = req.pointer("/params/name").and_then(Value::as_str).unwrap_or("");
+            let name = req
+                .pointer("/params/name")
+                .and_then(Value::as_str)
+                .unwrap_or("");
             let op = match name {
                 "desktop_status" => "status",
                 "desktop_next" => "next",
@@ -84,11 +89,17 @@ fn response(req: &Value) -> Option<Value> {
                 _ => "invalid",
             };
             match command(op) {
-                Ok(value) => json!({"content":[{"type":"text","text":value.to_string()}],"isError":false}),
+                Ok(value) => {
+                    json!({"content":[{"type":"text","text":value.to_string()}],"isError":false})
+                }
                 Err(error) => json!({"content":[{"type":"text","text":error}],"isError":true}),
             }
         }
-        _ => return Some(json!({"jsonrpc":"2.0","id":id,"error":{"code":-32601,"message":"Method not found"}})),
+        _ => {
+            return Some(
+                json!({"jsonrpc":"2.0","id":id,"error":{"code":-32601,"message":"Method not found"}}),
+            )
+        }
     };
     Some(json!({"jsonrpc":"2.0","id":id,"result":result}))
 }
@@ -111,7 +122,11 @@ fn mcp() -> io::Result<()> {
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
     let json_mode = args.iter().any(|arg| arg == "--json");
-    let args: Vec<&str> = args.iter().filter(|arg| arg.as_str() != "--json").map(String::as_str).collect();
+    let args: Vec<&str> = args
+        .iter()
+        .filter(|arg| arg.as_str() != "--json")
+        .map(String::as_str)
+        .collect();
     match args.as_slice() {
         ["mcp"] => {
             if let Err(error) = mcp() {
@@ -122,7 +137,11 @@ fn main() {
         ["--help"] | ["-h"] | ["help"] | [] => usage(),
         [name] => match command(name) {
             Ok(value) => {
-                if json_mode { println!("{value}"); } else { println!("{value:#}"); }
+                if json_mode {
+                    println!("{value}");
+                } else {
+                    println!("{value:#}");
+                }
             }
             Err(error) => {
                 if json_mode {
