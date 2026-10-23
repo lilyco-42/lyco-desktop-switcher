@@ -44,3 +44,8 @@ app (native shell)
 当前使用 Windows 默认 `Win+Ctrl+Left/Right` 系统快捷键模拟切换；要求交互式会话。模拟键盘不保证适用于远程会话、权限隔离或用户已更改快捷键的情况。后续再实现 Windows 原生 API 后端、真实桌面枚举和托盘。GitHub Actions 只验证编译/测试，不证明切换功能在真实桌面上可用。
 
 CI: [Windows Build](https://github.com/lilyco-42/lyco-desktop-switcher/actions/workflows/windows.yml)
+
+## Agent / MCP Integration
+
+See [docs/INTEGRATION.md](docs/INTEGRATION.md). CLI supports JSON output and MCP stdio tools.
+
