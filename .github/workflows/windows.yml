@@ -1,0 +1,43 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Format check
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --all-targets
+      - name: Build release
+        run: cargo build --release --locked
+      - name: Verify binary
+        shell: pwsh
+        run: |
+          $exe = "target/release/lyco-desktop-switcher.exe"
+          if (!(Test-Path $exe)) { throw "EXE missing" }
+          & $exe --help
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item $exe dist/
+          Copy-Item README.md dist/
+          Compress-Archive -Path dist/* -DestinationPath lyco-desktop-switcher-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lyco-desktop-switcher-windows-x64
+          path: lyco-desktop-switcher-windows-x64.zip
+          if-no-files-found: error

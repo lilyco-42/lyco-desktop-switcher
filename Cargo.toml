@@ -1,0 +1,10 @@
+[package]
+name = "lyco-desktop-switcher"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Small Windows virtual desktop switcher prototype"
+
+[[bin]]
+name = "lyco-desktop-switcher"
+path = "src/main.rs"

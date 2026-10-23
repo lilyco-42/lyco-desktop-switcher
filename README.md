@@ -33,3 +33,14 @@ app (native shell)
 ## 测试策略
 
 本机不编译运行；用 GitHub Actions Windows runner 执行 fmt、clippy、test、构建、产物打包；真实 Win10/11 虚拟桌面切换仍需要在交互式 Windows 会话人工验收。
+# Rust CLI MVP
+
+此阶段只有一个可构建的 Windows 命令行原型，尚无托盘、桌面编号、窗口移动、UDA 接入。
+
+- `lyco-desktop-switcher.exe next`：向右切换一桌
+- `lyco-desktop-switcher.exe prev`：向左切换一桌
+- `lyco-desktop-switcher.exe --help`：查看帮助
+
+当前使用 Windows 默认 `Win+Ctrl+Left/Right` 系统快捷键模拟切换；要求交互式会话。模拟键盘不保证适用于远程会话、权限隔离或用户已更改快捷键的情况。后续再实现 Windows 原生 API 后端、真实桌面枚举和托盘。GitHub Actions 只验证编译/测试，不证明切换功能在真实桌面上可用。
+
+CI: [Windows Build](https://github.com/lilyco-42/lyco-desktop-switcher/actions/workflows/windows.yml)
