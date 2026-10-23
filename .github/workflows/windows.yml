@@ -25,7 +25,7 @@ jobs:
       - name: Test
         run: cargo test --all-targets
       - name: Build release
-        run: cargo build --release --locked
+        run: cargo build --release
       - name: Verify binary
         shell: pwsh
         run: |
@@ -41,3 +41,4 @@ jobs:
           name: lyco-desktop-switcher-windows-x64
           path: lyco-desktop-switcher-windows-x64.zip
           if-no-files-found: error
+
